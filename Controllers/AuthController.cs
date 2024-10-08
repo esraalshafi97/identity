@@ -17,7 +17,7 @@ namespace todelete.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var token = await _tokenService.GenerateToken(model.Username);
+            var token =  _tokenService.GenerateToken(model.Username);
             return Ok(new { Token = token });
         }
     }
