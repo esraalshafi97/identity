@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace todelete.Controllers
@@ -15,9 +16,10 @@ namespace todelete.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var token =  _tokenService.GenerateToken(model.Username);
+            var token =  _tokenService.Generate(model.Username);
             return Ok(new { Token = token });
         }
     }

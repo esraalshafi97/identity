@@ -18,11 +18,11 @@ builder.Services.AddIdentityServer()
     .AddDeveloperSigningCredential();
 
 // Add authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+/*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = "https://localhost:5053"; // IdentityServer URL
-        options.Audience = "api1"; // API name
+      *//*  options.Audience = "api1"; // API name
         options.SaveToken = true;
         options.Events = new JwtBearerEvents
         {
@@ -33,8 +33,27 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 context.Token = accessToken;
                 return Task.CompletedTask;
             }
-        };
-    });
+        }*//*;
+    });*/
+
+string key = "DhftOS5uphK3vmCJQrexST1RsyjZBjXWRgJMFPU4";
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+             .AddJwtBearer(options =>
+             {
+                 TokenValidationParameters tokenValidationParameters = new TokenValidationParameters
+                 {
+                     ValidateIssuer = true,
+                     ValidateAudience = true,
+                     ValidateLifetime = true,
+                     ValidateIssuerSigningKey = true,
+                     ValidIssuer = "https://localhost:44381/",
+                    // ValidAudience = "https://localhost:44381/",
+                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+                 };
+                 options.TokenValidationParameters = tokenValidationParameters;
+             });
 
 
 // Other configurations...
@@ -43,7 +62,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddControllers();
 
 // Add Swagger configuration
-builder.Services.AddSwaggerGen(c =>
+/*builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
@@ -69,8 +88,8 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityDefinition("oauth2", oauthOptions);
 
     // Add security requirement to all operations
-   /* c.AddSecurityRequirement(new List<string> { "oauth2" });*/
-});
+   *//* c.AddSecurityRequirement(new List<string> { "oauth2" });*//*
+});*/
 
 
 var app = builder.Build();
@@ -79,15 +98,15 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 // Move Swagger middleware to the beginning of the pipeline
-app.UseSwagger();
+//app.UseSwagger();
 
 // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.)
-app.UseSwaggerUI(c =>
+/*app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    c.OAuthClientId("swaggerui");
+   // c.OAuthClientId("swaggerui");
     c.OAuthAppName("Swagger UI");
-});
+});*/
 
 // Ensure Swagger UI is accessible after authentication
 app.Use((context, next) =>

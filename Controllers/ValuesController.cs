@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace todelete.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
 
     [ApiController]
     [Route("[controller]")]
